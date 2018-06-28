@@ -1,0 +1,42 @@
+{% load mathfilters %}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>방명록</title>
+</head>
+<body>
+	<form action="/guestbook/add" method="post">{% csrf_token %}
+		<table border=1 width=500>
+			<tr>
+				<td>이름</td><td><input type="text" name="name"></td>
+				<td>비밀번호</td><td><input type="password" name="password"></td>
+			</tr>
+			<tr>
+				<td colspan=4><textarea name="message" cols=60 rows=5></textarea></td>
+			</tr>
+			<tr>
+				<td colspan=4 align=right><input type="submit" VALUE=" 확인 "></td>
+			</tr>
+		</table>
+	</form>
+	<!--이곳은 파이썬/장고에서 지원하는 코드 삽입 구문-->
+	{% for guestbook in guestbook_list %}
+	<br>
+	<table width=510 border=1>
+		<tr>
+			<!--<td>{{ guestbook.id }}</td>-->
+			<td>{{ guestbook_list.count | add:1 | sub:forloop.counter }}</td>
+			<td>{{ guestbook.name }}</td>
+			<!--필터함수를 사용하여 regdate 포멧팅 해줄수 있다.-->
+			<!--장고의 템플릿.필터스 문서를 참고-->
+			<td>{{ guestbook.regdate|date:'Y-m-d H:i:s' }}</td>
+			<td><a href="/guestbook/deleteform?id={{guestbook.id}}">삭제</a></td>
+		</tr>
+		<tr>
+			<!--메시지 또한 필터함수를 사용하여 개행 입력에 대한 처리가 필요하다.-->
+			<td colspan=4>{{ guestbook.message|linebreaksbr }}</td>
+		</tr>
+	</table>
+	{% endfor %}
+</body>
+</html>
